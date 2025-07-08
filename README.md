@@ -1,14 +1,8 @@
 # Simulated Data
 
-Data associated with simulations under various demographic models.
+Data associated with simulations under various demographic models.  
 
-
-
-## Asymmetric Population Genetics
-
-This project aims to develop methods for identifying asymmetry in population covariance in Population Graphs. The specifics of these data include:
-
-### Disconnected Populations
+## Disconnected Populations
 
 The null case of no connectivity and only genetic drift working:  
 
