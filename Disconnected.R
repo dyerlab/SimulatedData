@@ -16,63 +16,86 @@ K <- 25
 L <- 20 
 N <- 100 
 Tmax <- 1000
-folder <- "Disconnected_m0_mu0/"
+folder <- "Disconnected/m0/"
+reps <- 1:9
 
 
+cat("Simulating: ", folder, "\n")
 
 
-# make the random data
-data <- data.frame()
-for( i in 1:K) { 
-  p <- rnorm(L, mean=0.5, sd = 0.1)
-  q <- 1-p
-  locusNames <- paste("loc", stringr::str_pad(1:L, side="left", pad="0", width=2) ,sep="")
+for( rep in reps ) { 
   
-  data.frame( Locus = c(locusNames,locusNames), 
-              Allele = c( rep("A",L), rep("B",L) ),
-              Frequency = c(p,q) ) |>
-    arrange( Locus, Allele ) -> freqs
+  folder <- paste( folder, "rep", rep, "/", 
+                   sep="" )
   
-  make_population(freqs, N )  |> 
-    select( -ID ) |> 
-    mutate( Population = i ) |>
-    select( Population, everything() ) -> pop
-  data <- rbind( data, pop )
-}
-
-
-# Iterate Through Generations
-for( gen in 0:Tmax ) { 
+  # make the replicate folder
+  system(paste("mkdir -p",folder))
   
-  
-  ## Save Population every T %% 5
-  if( gen %% 5 == 0 ) { 
-    cat(gen,"\n")
+  # make the random data
+  data <- data.frame()
+  for( i in 1:K) { 
+    p <- rnorm(L, mean=0.5, sd = 0.1)
+    q <- 1-p
+    locusNames <- paste( "loc", 
+                         stringr::str_pad( 1:L, 
+                                           side="left", 
+                                           pad="0", 
+                                           width=2) ,
+                         sep="")
     
-    paste(folder,"/data",sep = "") -> newName
-    paste(newName,str_pad(gen,4,pad="0"),"rda",sep=".") -> fname 
-    write_csv( data, file = fname )
+    data.frame( Locus = c( locusNames, locusNames ), 
+                Allele = c( rep( "A", L ), 
+                            rep( "B", L) ),
+                Frequency = c( p, q) ) |>
+      arrange( Locus, Allele ) -> freqs
+    
+    make_population( freqs, N )  |> 
+      select( -ID ) |> 
+      mutate( Population = i ) |>
+      select( Population, everything() ) -> pop
+    data <- rbind( data, pop )
   }
   
-  ## Mate to make new population
-  newData <- data.frame() 
-  for( i in 1:K ) { 
-    
-    data |>
-      filter( Population == i ) -> pop 
-    
-    newPop <- data.frame() 
-    
-    ## Fill up the rest with resident
-    while( nrow(newPop) < N ) { 
-      idx <- sample( 1:N, size=2, replace=FALSE)
-      newPop <- rbind( newPop, 
-                       mate( pop[idx[1],], pop[idx[2],] ) ) 
+  
+  cat("\n", rep, "\n")
+  
+  # Iterate Through Generations
+  for( gen in 0:Tmax ) { 
+      
+    ## Save Population every T %% 5
+    if( gen %% 5 == 0 ) { 
+      
+      if( gen %% 50 == 0 ) { 
+        cat(" ", gen)
+      }
+      
+      paste(folder,"/data",sep = "") -> newName
+      paste(newName,str_pad(gen,4,pad="0"),"rda",sep=".") -> fname 
+      write_csv( data, file = fname )
     }
-    newData <- rbind( newData, 
-                      newPop )
-  }
-  data <- newData
+    
+    ## Mate to make new population
+    newData <- data.frame() 
+    for( i in 1:K ) { 
+      
+      data |>
+        filter( Population == i ) -> pop 
+      
+      newPop <- data.frame() 
+      
+      ## Fill up the rest with resident
+      while( nrow(newPop) < N ) { 
+        idx <- sample( 1:N, size=2, replace=FALSE)
+        newPop <- rbind( newPop, 
+                         mate( pop[idx[1],], pop[idx[2],] ) ) 
+      }
+      newData <- rbind( newData, 
+                        newPop )
+    }
+    data <- newData
+    
+    
+  } # gen
   
   
-} # gen
+} #rep 
