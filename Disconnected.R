@@ -16,8 +16,8 @@ K <- 25
 L <- 20 
 N <- 100 
 Tmax <- 1000
-folder <- "Disconnected/m0/"
-reps <- 1:9
+folder_base <- "Disconnected/m0/"
+reps <- 2:9
 
 
 cat("Simulating: ", folder, "\n")
@@ -25,7 +25,7 @@ cat("Simulating: ", folder, "\n")
 
 for( rep in reps ) { 
   
-  folder <- paste( folder, "rep", rep, "/", 
+  folder <- paste( folder_base, "rep", rep, "/", 
                    sep="" )
   
   # make the replicate folder
