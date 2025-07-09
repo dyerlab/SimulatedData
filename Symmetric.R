@@ -113,16 +113,18 @@ for( rep in reps ) {
           newPop <- rbind( newPop, migs )
         } else { 
         
-          if( runif(1) <= 0.5 ) {  ## left 
+          side <- sample( c("L","R"), size=1, replace=FALSE)
+          
+          if( side == "L" ) {  ## left 
             pop2 <- data |> filter( Population == (i-1) )
-            idx1 <- sample( 1:N, size=Nm2, replace=FALSE)
-            idx2 <- sample( 1:N, size=Nm2, replace=FALSE )
+            idx1 <- sample( 1:N, size=1, replace=FALSE)
+            idx2 <- sample( 1:N, size=1, replace=FALSE )
             migs <- mate( pop[idx1,], pop2[idx2,])
             newPop <- rbind( newPop, migs )
           } else {                  ## right
             pop2 <- data |> filter( Population == (i+1) )
-            idx1 <- sample( 1:N, size=Nm2, replace=FALSE)
-            idx2 <- sample( 1:N, size=Nm2, replace=FALSE )
+            idx1 <- sample( 1:N, size=1, replace=FALSE)
+            idx2 <- sample( 1:N, size=1, replace=FALSE )
             migs <- mate( pop[idx1,], pop2[idx2,])
             newPop <- rbind( newPop, migs )
           }
