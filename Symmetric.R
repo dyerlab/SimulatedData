@@ -95,20 +95,43 @@ for( rep in reps ) {
         newPop <- rbind( newPop, migs )
         
       } else { # take from both sides
-          
-        ## left 
-        pop2 <- data |> filter( Population == (i-1) )
-        idx1 <- sample( 1:N, size=Nm2, replace=FALSE)
-        idx2 <- sample( 1:N, size=Nm2, replace=FALSE )
-        migs <- mate( pop[idx1,], pop2[idx2,])
-        newPop <- rbind( newPop, migs )
         
-        ## right
-        pop2 <- data |> filter( Population == (i+1) )
-        idx1 <- sample( 1:N, size=Nm2, replace=FALSE)
-        idx2 <- sample( 1:N, size=Nm2, replace=FALSE )
-        migs <- mate( pop[idx1,], pop2[idx2,])
-        newPop <- rbind( newPop, migs )
+        if( Nm2 > 0 ) { 
+        
+          ## left 
+          pop2 <- data |> filter( Population == (i-1) )
+          idx1 <- sample( 1:N, size=Nm2, replace=FALSE)
+          idx2 <- sample( 1:N, size=Nm2, replace=FALSE )
+          migs <- mate( pop[idx1,], pop2[idx2,])
+          newPop <- rbind( newPop, migs )
+          
+          ## right
+          pop2 <- data |> filter( Population == (i+1) )
+          idx1 <- sample( 1:N, size=Nm2, replace=FALSE)
+          idx2 <- sample( 1:N, size=Nm2, replace=FALSE )
+          migs <- mate( pop[idx1,], pop2[idx2,])
+          newPop <- rbind( newPop, migs )
+        } else { 
+        
+          if( runif(1) <= 0.5 ) {  ## left 
+            pop2 <- data |> filter( Population == (i-1) )
+            idx1 <- sample( 1:N, size=Nm2, replace=FALSE)
+            idx2 <- sample( 1:N, size=Nm2, replace=FALSE )
+            migs <- mate( pop[idx1,], pop2[idx2,])
+            newPop <- rbind( newPop, migs )
+          } else {                  ## right
+            pop2 <- data |> filter( Population == (i+1) )
+            idx1 <- sample( 1:N, size=Nm2, replace=FALSE)
+            idx2 <- sample( 1:N, size=Nm2, replace=FALSE )
+            migs <- mate( pop[idx1,], pop2[idx2,])
+            newPop <- rbind( newPop, migs )
+          }
+          
+        }
+        
+        
+          
+        
         
       }
       
