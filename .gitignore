@@ -1,4 +1,4 @@
-# History files
+# History filesA
 .Rhistory
 .Rapp.history
 
@@ -48,5 +48,5 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-*/.DS_Store
+.DS_Store
 
