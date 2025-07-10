@@ -7,6 +7,12 @@
 #' Random starting frequencies (p <- rnorm(L, mean=0.5, sd = 0.1); q <- 1-p).
 #' Genotypes Every 100 saved as text.
 #' 
+#' Isotropic Gene Flow
+#' 
+#' A <-m-> B <-m-> C <-m-> D
+#' 
+#' *Always* the same in each direction.
+#' 
 
 library( tidyverse )
 library( gstudio )
@@ -16,8 +22,8 @@ K <- 25
 L <- 20 
 N <- 100 
 Tmax <- 1000
-m <- 0.05
-folder_base <- "1-Dimensional/Asymmetric/m05/"
+m <- 0.01
+folder_base <- "1-Dimensional/Isotropic/m01/"
 Nm <- floor( N*m )
 Nm2 <- floor( Nm/2 )
 reps <- 0:9
@@ -63,7 +69,7 @@ for( rep in reps ) {
     ## Save Population every T %% 5
     if( gen %% 5 == 0 ) { 
       
-      paste(folder,"data",sep = "") -> newName
+      paste(folder,"/data",sep = "") -> newName
       paste(newName,str_pad(gen,4,pad="0"),"rda",sep=".") -> fname 
       write_csv( data, file = fname )
     }
@@ -78,7 +84,7 @@ for( rep in reps ) {
       newPop <- data.frame() 
       
       # Find Migrants
-      if( i < K ) {  # first, take from next only
+      if( i == 1 ) {  # first, take from next only
       
         pop2 <- data |> filter( Population == (i+1) )
         idx1 <- sample( 1:N, size=Nm, replace=FALSE)
@@ -86,7 +92,56 @@ for( rep in reps ) {
         migs <- mate( pop[idx1,], pop2[idx2,])
         newPop <- rbind( newPop, migs )
           
-      } 
+      } else if( i == K ) { # last, take from previous only
+        
+        pop2 <- data |> filter( Population == (i-1) )
+        idx1 <- sample( 1:N, size=Nm, replace=FALSE)
+        idx2 <- sample( 1:N, size=Nm, replace=FALSE )
+        migs <- mate( pop[idx1,], pop2[idx2,])
+        newPop <- rbind( newPop, migs )
+        
+      } else { # take from both sides
+        
+        if( Nm2 > 0 ) { 
+        
+          ## left 
+          pop2 <- data |> filter( Population == (i-1) )
+          idx1 <- sample( 1:N, size=Nm2, replace=FALSE)
+          idx2 <- sample( 1:N, size=Nm2, replace=FALSE )
+          migs <- mate( pop[idx1,], pop2[idx2,])
+          newPop <- rbind( newPop, migs )
+          
+          ## right
+          pop2 <- data |> filter( Population == (i+1) )
+          idx1 <- sample( 1:N, size=Nm2, replace=FALSE)
+          idx2 <- sample( 1:N, size=Nm2, replace=FALSE )
+          migs <- mate( pop[idx1,], pop2[idx2,])
+          newPop <- rbind( newPop, migs )
+        } else { 
+        
+          side <- sample( c("L","R"), size=1, replace=FALSE)
+          
+          if( side == "L" ) {  ## left 
+            pop2 <- data |> filter( Population == (i-1) )
+            idx1 <- sample( 1:N, size=1, replace=FALSE)
+            idx2 <- sample( 1:N, size=1, replace=FALSE )
+            migs <- mate( pop[idx1,], pop2[idx2,])
+            newPop <- rbind( newPop, migs )
+          } else {                  ## right
+            pop2 <- data |> filter( Population == (i+1) )
+            idx1 <- sample( 1:N, size=1, replace=FALSE)
+            idx2 <- sample( 1:N, size=1, replace=FALSE )
+            migs <- mate( pop[idx1,], pop2[idx2,])
+            newPop <- rbind( newPop, migs )
+          }
+          
+        }
+        
+        
+          
+        
+        
+      }
       
       ## Fill up the rest with resident
       while( nrow(newPop) < N ) { 
