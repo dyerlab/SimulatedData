@@ -63,7 +63,7 @@ for( rep in reps ) {
     ## Save Population every T %% 5
     if( gen %% 5 == 0 ) { 
       
-      paste(folder,"/data",sep = "") -> newName
+      paste(folder,"data",sep = "") -> newName
       paste(newName,str_pad(gen,4,pad="0"),"rda",sep=".") -> fname 
       write_csv( data, file = fname )
     }
