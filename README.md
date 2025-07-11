@@ -27,7 +27,7 @@ The simplest case builds on the previous with the following changes:
 Movement of gametes in all directions 
 
   - A <-m-> B <-m-> C <-m-> D; m = 0.05
-  - A <-m-> B <-m-> C <-m-> Dl m = 0.01
+  - A <-m-> B <-m-> C <-m-> D; m = 0.01
 
 
 ### Anisotropic
