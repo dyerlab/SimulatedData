@@ -14,7 +14,7 @@ Data associated with simulations under various demographic models.  The base set
 The null case of no connectivity and only genetic drift working.  
 
   - N 100
-  - N 50
+  - N 50 ==dlab1==
   - N 20 
 
 
@@ -39,7 +39,7 @@ Movement of gametes at differential rates
 Migration in only one direction
 
   - $A \to B$ @ m = 0.05
-  - $A \to B$ @ m = 0.01
+  - $A \to B$ @ m = 0.01 ==main==
 
 #### Asymmetric
 

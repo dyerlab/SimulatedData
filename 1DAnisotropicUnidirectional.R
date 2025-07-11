@@ -22,10 +22,9 @@ K <- 25
 L <- 20 
 N <- 100 
 Tmax <- 1000
-m <- 0.05
-folder_base <- "1-Dimensional/Isotropic/m05/"
+m <- 0.01
+folder_base <- "1-Dimensional/Anisotropic/Unidirectional/m01/"
 Nm <- floor( N*m )
-Nm2 <- floor( Nm/2 )
 reps <- 0:9
 
 
