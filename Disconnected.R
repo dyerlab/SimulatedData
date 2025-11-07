@@ -14,12 +14,13 @@ library( gstudio )
 
 K <- 25
 L <- 20 
-N <- 20 
+N <- 50 
 Tmax <- 1000
 folder_base <- "Disconnected/N50/"
+
+
+
 reps <- 0:9
-
-
 cat("Simulating: ", folder_base, "\n")
 
 
